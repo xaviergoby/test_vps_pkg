@@ -11,4 +11,4 @@ def print_numpy_pkg_version():
 
 
 if __name__ == "__main__":
-    print_numpy_pkg_version()
+    print(print_numpy_pkg_version())
