@@ -13,3 +13,4 @@ def print_numpy_pkg_version():
 if __name__ == "__main__":
     print(print_numpy_pkg_version())
     print(test_pkg_module_script.print_python_ver())
+    print(test_pkg_module_script.msg_for_bbz())
