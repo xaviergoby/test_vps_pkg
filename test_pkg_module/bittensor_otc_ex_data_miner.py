@@ -73,14 +73,19 @@ class OTCExchangeDataScraper:
         buy_orders_df = buy_orders_df.reindex(columns=["Datetime", "Prices", "Volume", "Total"])
         return sell_orders_df, buy_orders_df
 
-    def save_otc_ex_order_book_csv_data(self):
+    def save_otc_ex_order_book_csv_data(self, csv_cnt=None):
         sell_orders_df, buy_orders_df = self.build_order_book_dfs()
         # sell_orders_csv_file_name = sell_orders_df["Datetime"][0].replace("/", "-").replace(" ", "_").replace(":", "-")
         # sell_orders_csv_file_path = os.path.join(settings.BITTENSOR_OTC_EX_DATA_DIR, f"sell_orders/{sell_orders_csv_file_name}_sell_orders.csv")
         # buy_orders_csv_file_name = buy_orders_df["Datetime"][0].replace("/", "-").replace(" ", "_").replace(":", "-")
         # buy_orders_csv_file_path = os.path.join(settings.BITTENSOR_OTC_EX_DATA_DIR, f"buy_orders/{buy_orders_csv_file_name}_buy_orders.csv")
-        sell_orders_df.to_csv("sell_orders.csv")
-        buy_orders_df.to_csv("buy_orders.csv")
+        if csv_cnt is None:
+            sell_orders_df.to_csv("sell_orders.csv")
+            buy_orders_df.to_csv("buy_orders.csv")
+        else:
+            sell_orders_df.to_csv(f"sell_orders{csv_cnt}.csv")
+            buy_orders_df.to_csv(f"buy_orders{csv_cnt}.csv")
+
 
 
 
