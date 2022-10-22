@@ -1,9 +1,42 @@
 # test_vps_pkg
 
+
+## Sources
+- [Automating and Scheduling python script as Cronjobs in Ubuntu.
+](https://medium.com/analytics-vidhya/automating-and-scheduling-python-script-as-cronjobs-in-ubuntu-6b31fdbce3d1)
+- [How to Connect to Droplets with SSH 
+](https://docs.digitalocean.com/products/droplets/how-to/connect-with-ssh/)
+- [Basic overview of SSH Keys
+](https://www.ssh.com/academy/ssh-keys)
+- [What is an SSH Key?](https://www.atlassian.com/git/tutorials/git-ssh)
+- [Lessons Learned: Digital Ocean for Python 3
+](https://towardsdatascience.com/lessons-learned-digital-ocean-for-python-3-e2442db4246f)
+
 ## Notes
 
+### Crontab Instructions
 
-> */1 * * * * /Users/Ksavier/PycharmProjects/test_vps_pkg/venv/bin/python3 /Users/Ksavier/PycharmProjects/test_vps_pkg/main.py
+1. Run the following crontab command    
+`crontab -e`
+2. Then go to the end of the newly opened file and enter **Insert** mode by pressing `i`
+3. Now add the following the line of:     
+`*/1 * * * * /usr/bin/python3 /home/<user_name>/test_vps_pkg/main.py`
+4. Now press `Esc` and then type `:wq` (yes, type those 3 characters) and then click `Enter`
+
+## Managing Digital Ocean Droplet's
+
+Recall that Digital Ocean (DO) _Droplets_ are...
+
+> are Linux-based virtual machines (VMs) that run on top of virtualized hardware. Each Droplet you create is a new server you can use, either standalone or as part of a larger, cloud-based infrastructure.
+
+DO Droplets are managed via a terminal & SSH. As such, this requires either a terminal with a built-in SSH client or just simply an SSH client. Optionally although highly advisable is to also have an **SSH key pair**!
+
+Client authentication can be achieved via either the use of passwords or SSH keys. The later of the two being significantly more secure
+
+Connecting to a Droplet via SSH requires 3 pieces of info:
+1. Droplet's IP address.
+2. The default username on the Droplet remote server. The default username is `root` on most operating systems, like Ubuntu and CentOS.
+3. The default password for the above corresponding default user **IF** that is the case that SSH keys are not being used.
 
 ## Storage Space Calculations
 
@@ -23,6 +56,20 @@
   - 10080 times a week
   - 10080 KB = 10,08 MB
 
+
+## Steps
+
+### 1) `ssh` into your Droplet virtual machine server
+
+Syntax:
+
+```ssh <user_name>>@<IP_address_ipv4>```
+
+Example:
+
+```ssh xav@207.154.227.72```
+
+---
 
 ## Key Info
 - IP address (ipv4): 207.154.227.72
@@ -86,5 +133,96 @@ paste:
 | 4 | 15/10/2022 07:43 | 22.45 | 10.0 | 224.5 |
 
 
+---
+
+```bash
+$ crontab -e
+```
+
+Add within Vim to this file the now following (i):
+```
+*/1 * * * * /usr/bin/python3 /home/xav/test_vps_pkg/main.py
+```
+
+Press `Esc` and then type `:wq` and hit enter.
+
+Now check to see if this worked via the following:
+```bash
+crontab -l
+```
+
+Count the number of files in a directory
+```bash
+ls <path_to_or_name_of_directory> -1 | wc -l
+```
+
+Size of a directory
+```bash
+du -h <path_to_or_name_of_directory>
+```
+
+```bash
+pwd
+```
+> Returns -> /home/xav/test_vps_pkg
+
+```bash
+cat logs/bittensor_otc_exchange_data_download_logs.txt
+```
+
+```bash
+cat logs/bittensor_otc_exchange_data_download_logs.txt | cut -d ' ' -f 11
+```
+
+Compute the SUM of TOTALS of each row in bittensor_otc_exchange_data_download_logs.txt
+```bash
+cat logs/bittensor_otc_exchange_data_download_logs.txt | cut -d ' ' -f 11 | paste -s -d+ - | bc
+```
+Get total number of rows in otc_exchange_data/cmplt_orders_dataset/sell_orders.csv
+```bash
+cat data/bittensor/otc_exchange_data/cmplt_orders_dataset/sell_orders.csv | wc -l
+```
+
+
+FILENAMESELLS="data/bittensor/otc_exchange_data/cmplt_orders_dataset/sell_orders.csv"
+FILENAMEBUYS="data/bittensor/otc_exchange_data/cmplt_orders_dataset/buy_orders.csv"
+
+sells=$(cat $FILENAMESELLS | wc -l)
+buys=$(cat $FILENAMEBUYS | wc -l)
+
+sum=$(($sells + $buys));
+echo $sum
+
+
+
+
+
+*/1 * * * * /usr/bin/python3 /home/xav/test_vps_pkg/main.py
+
+
+total_count=0
+
+FILENAME="logs/bittensor_otc_exchange_data_download_logs.txt"
+
+LINES=$(cat $FILENAME)
+
+for TICK in $LINES
+do
+    echo "TICK"
+    tick_OB_total=${TICK: -2}
+    echo $x_value-$y_value | bc
+    total_count=total_count+tick_OB_total
+done
+
+
+cat logs/bittensor_otc_exchange_data_download_logs.txt | cut -d ' ' -f 9 | paste -sd+ | bc -l
+
+
+## Misc
+
 [//]: # (scp -r xav@10.10.0.1:/remote/directory/new_image.png /local/directory)
+
+
+
+
 

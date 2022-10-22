@@ -199,7 +199,7 @@ class OTCExchangeDataScraper:
         sell_n_buy_orders_dl_cnt = tuple(map(lambda OB_side: OB_side.shape[0], self.current_tick_order_book))
         self.__current_tick_sell_orders_dl_cnt, self.__current_tick_buy_orders_dl_cnt = sell_n_buy_orders_dl_cnt
 
-    def dl_create_n_save_current_ex_OB_datasets(self, test_mode=False):
+    def dl_create_n_save_current_ex_OB_datasets(self, dl_mode, test_mode=False):
         """
         STEP 4
         :param test_mode: By default test_mode=False and therefore the
@@ -214,24 +214,27 @@ class OTCExchangeDataScraper:
         sell_orders_df, buy_orders_df = self.current_tick_order_book
         self.__current_tick_sell_orders_dl_cnt = sell_orders_df.shape[0]
         self.__current_tick_buy_orders_dl_cnt = buy_orders_df.shape[0]
-        # CMPLT OTC ex order book datasets
-        updated_cmplt_OB_dataset_dfs = self.create_updated_cmplt_orders_dfs(sell_orders_df, buy_orders_df)
-        updated_cmplt_sell_orders_dataset_df, updated_cmplt_buy_orders_dataset_df = updated_cmplt_OB_dataset_dfs
         # CURRENT OTC ex TICK order book dataset file paths
         sell_orders_csv_file_abs_path, buy_orders_csv_file_abs_path = self.create_tick_order_book_abs_dl_file_paths(test_mode)
-        # CMPLT OTC ex order book dataset file paths
-        cmplt_OB_abs_csv_file_paths = self.create_cmplt_order_book_dataset_abs_dl_file_paths(test_mode)
-        cmplt_OB_sell_orders_abs_csv_file_path, cmplt_OB_buy_orders_abs_csv_file_path = cmplt_OB_abs_csv_file_paths
         # Save CURRENT OTC ex TICK order book datasets
-        sell_orders_df.to_csv(sell_orders_csv_file_abs_path)
-        buy_orders_df.to_csv(buy_orders_csv_file_abs_path)
-        # Save CMPLT OTC ex order book datasets
-        updated_cmplt_sell_orders_dataset_df.to_csv(cmplt_OB_sell_orders_abs_csv_file_path)
-        updated_cmplt_buy_orders_dataset_df.to_csv(cmplt_OB_buy_orders_abs_csv_file_path)
+        if dl_mode == "batch":
+            sell_orders_df.to_csv(sell_orders_csv_file_abs_path)
+            buy_orders_df.to_csv(buy_orders_csv_file_abs_path)
+        if dl_mode == "cmplt" or dl_mode == "complete" or dl_mode == "all":
+            # CMPLT OTC ex order book datasets
+            updated_cmplt_OB_dataset_dfs = self.create_updated_cmplt_orders_dfs(sell_orders_df, buy_orders_df)
+            updated_cmplt_sell_orders_dataset_df, updated_cmplt_buy_orders_dataset_df = updated_cmplt_OB_dataset_dfs
+            # CMPLT OTC ex order book dataset file paths
+            cmplt_OB_abs_csv_file_paths = self.create_cmplt_order_book_dataset_abs_dl_file_paths(test_mode)
+            cmplt_OB_sell_orders_abs_csv_file_path, cmplt_OB_buy_orders_abs_csv_file_path = cmplt_OB_abs_csv_file_paths
+            # Save CMPLT OTC ex order book datasets
+            updated_cmplt_sell_orders_dataset_df.to_csv(cmplt_OB_sell_orders_abs_csv_file_path)
+            updated_cmplt_buy_orders_dataset_df.to_csv(cmplt_OB_buy_orders_abs_csv_file_path)
+
 
     # ############################## Main Run Method ##############################
 
-    def run_otc_ex_tick(self, test_mode=False, verbosity=1):
+    def run_otc_ex_tick(self, dl_mode="batch", test_mode=False, verbosity=1):
         """
         :param test_mode: If True then data is NOT saved to bittensor/otc_exchange_data dir! Instead,
         if deny_save is left as the def False then data is saved to the bittensor/test_otc_exchange_data dir
@@ -253,7 +256,7 @@ class OTCExchangeDataScraper:
         # STEP 3
         self.update_current_tick_OB_sell_n_buy_orders_dl_cnt()
         # STEP 4
-        self.dl_create_n_save_current_ex_OB_datasets(test_mode)
+        self.dl_create_n_save_current_ex_OB_datasets(dl_mode, test_mode)
 
         msg = f"{self.current_dt_str()} | " \
               f"BUY {self.current_tick_buy_orders_dl_cnt} | " \
@@ -266,51 +269,9 @@ class OTCExchangeDataScraper:
         if verbosity == 1:
             print(msg)
 
-
-    def run(self, test_mode=False, verbosity=1):
+    def run(self, dl_mode="batch", test_mode=False, verbosity=1):
         self.run_otc_ex_tick()
 
-
-    # def dl_otc_ex_tick_order_book_dataset(self, test_mode=False, deny_save=False):
-    #     """
-    #     :param test_mode: If True then data is NOT saved to bittensor/otc_exchange_data dir! Instead,
-    #     if deny_save is left as the def False then data is saved to the bittensor/test_otc_exchange_data dir
-    #     BUT if deny_save is True then data is not saved at all & is instead returned by the function as a 2-tuple
-    #     of dataframes consisting of sell orders & buy orders
-    #     instead of bittensor/otc_exchange_data dir.
-    #     :param deny_save:
-    #     :return:
-    #     """
-    #     # csv_file_save_dtstamp = self.current_dt_str(dt_str_format="%d-%m-%Y_%H-%M-%S")
-    #     # sell_orders_df, buy_orders_df = self.build_order_book_dfs()
-    #     sell_orders_df, buy_orders_df = self.current_tick_order_book
-    #
-    #     sell_orders_csv_file_name = f'{sell_orders_df["Datetime"][0].replace("/", "-").replace(" ", "_").replace(":", "-")}_sell_orders.csv'
-    #     buy_orders_csv_file_name = f'{buy_orders_df["Datetime"][0].replace("/", "-").replace(" ", "_").replace(":", "-")}_buy_orders.csv'
-    #
-    #     tick_order_book_abs_dl_file_paths = self.create_tick_order_book_abs_dl_file_paths(test_mode)
-    #     sell_orders_abs_dl_file_path, buy_orders_abs_dl_file_path = tick_order_book_abs_dl_file_paths
-    #     sell_orders_csv_file_abs_path, buy_orders_csv_file_abs_path = sell_orders_abs_dl_file_path, buy_orders_abs_dl_file_path
-    #
-    #     if deny_save is False:
-    #         sell_orders_df.to_csv(sell_orders_csv_file_abs_path)
-    #         buy_orders_df.to_csv(buy_orders_csv_file_abs_path)
-    #     else:
-    #         return sell_orders_df, buy_orders_df
-    #
-    #     if test_mode is True:
-    #         sell_orders_csv_file_abs_path = os.path.join(settings.TEST_BITTENSOR_OTC_EX_DATA_DIR, f'sell_orders/{sell_orders_csv_file_name}')
-    #         buy_orders_csv_file_abs_path = os.path.join(settings.TEST_BITTENSOR_OTC_EX_DATA_DIR, f'buy_orders/{buy_orders_csv_file_name}')
-    #         if deny_save is False:
-    #             sell_orders_df.to_csv(sell_orders_csv_file_abs_path)
-    #             buy_orders_df.to_csv(buy_orders_csv_file_abs_path)
-    #         else:
-    #             return sell_orders_df, buy_orders_df
-    #     else:
-    #         sell_orders_csv_file_abs_path = os.path.join(settings.BITTENSOR_OTC_EX_DATA_DIR, f'sell_orders/{sell_orders_csv_file_name}')
-    #         buy_orders_csv_file_abs_path = os.path.join(settings.BITTENSOR_OTC_EX_DATA_DIR, f'buy_orders/{buy_orders_csv_file_name}')
-    #         sell_orders_df.to_csv(sell_orders_csv_file_abs_path)
-    #         buy_orders_df.to_csv(buy_orders_csv_file_abs_path)
 
 
 
@@ -318,5 +279,5 @@ if __name__ == "__main__":
     otc_ex_data_scraper = OTCExchangeDataScraper()
     # otc_ex_data_scraper.dl_otc_ex_tick_order_book_dataset()
     # otc_ex_data_scraper.run_otc_ex_tick(test_mode=False)
-    otc_ex_data_scraper.run(test_mode=False, verbosity=1)
+    otc_ex_data_scraper.run(dl_mode="batch", test_mode=False, verbosity=1)
 
