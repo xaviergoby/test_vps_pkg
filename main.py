@@ -35,7 +35,7 @@ def main_event_loop(dl_delay_mins=5, dl_events_cnt=None, dl_mode="batch", test_m
 
 
 if __name__ == "__main__":
-    # main()
-    main_event_loop(dl_delay_mins=1, dl_events_cnt=5, dl_mode="batch", test_mode=False, verbosity=1)
+    main(dl_mode="batch", test_mode=False, verbosity=1)
+    # main_event_loop(dl_delay_mins=1, dl_events_cnt=5, dl_mode="batch", test_mode=False, verbosity=1)
     # main_event_loop(dl_delay_mins=5, dl_events_cnt=3, dl_mode="batch", test_mode=False, verbosity=1)
 
