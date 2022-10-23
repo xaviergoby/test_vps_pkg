@@ -130,4 +130,5 @@ dmypy.json
 
 
 # Additional personal files to ignore
+misc_utils.py
 NOTES.md

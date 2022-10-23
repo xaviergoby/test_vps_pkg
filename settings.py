@@ -20,3 +20,5 @@ TEST_CMPLT_ORDERS_DATASET_DIR = os.path.join(TEST_BITTENSOR_OTC_EX_DATA_DIR, "cm
 BITTENSOR_LOGS_TXT_FILE = os.path.join(LOGS_DIR, "bittensor_otc_exchange_data_download_logs.txt")
 TEST_BITTENSOR_LOGS_TXT_FILE = os.path.join(LOGS_DIR, "test_bittensor_otc_exchange_data_download_logs.txt")
 
+
+SCRAPED_DATASETS_DIR = os.path.join(BITTENSOR_DATA_DIR, "scraped_datasets")
