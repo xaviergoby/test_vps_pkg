@@ -15,4 +15,10 @@ def update_orders_download_logs(log_file_path, log_msg):
 
 
 if __name__ == "__main__":
-    pass
+    # 15-10-2022_07-43_sell_orders.csv
+    # 15-10-2022_07-44_buy_orders.csv
+    # 15-10-2022_07-43_sell_orders.csv
+    # 15-10-2022_07-44_buy_orders.csv
+    import settings
+    # txt_file_path = settings.BITTENSOR_LOGS_TXT_FILE
+    txt_file_path = settings.TEST_BITTENSOR_LOGS_TXT_FILE

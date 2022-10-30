@@ -48,13 +48,10 @@ Connecting to a Droplet via SSH requires 3 pieces of info:
 
 - One sell/buy orders csv file of data obtained is approximately 1 KB (1000 bytes).    
 
-
 - Download interval = 5 minuets
   - 12 times an hour
   - 288 times a day
   - 2016 times a week      
-
-  
 
 - Download interval = 1 minuet
   - 60 times an hour

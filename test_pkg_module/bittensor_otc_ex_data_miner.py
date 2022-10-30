@@ -30,7 +30,6 @@ class OTCExchangeDataScraper:
         return datetime.now()
 
     @property
-    # def current_tick_order_book(self) -> tuple[pd.DataFrame]:
     def current_tick_order_book(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """
         :return: i.e. sell_orders_df, buy_orders_df
@@ -40,6 +39,7 @@ class OTCExchangeDataScraper:
     @property
     def current_tick_sell_orders_dl_cnt(self):
         return self.__current_tick_sell_orders_dl_cnt
+
     @property
     def current_tick_buy_orders_dl_cnt(self):
         return self.__current_tick_buy_orders_dl_cnt
@@ -147,7 +147,6 @@ class OTCExchangeDataScraper:
                                                          current_tick_ob_sell_orders_file_rel_path)
             buy_orders_csv_file_abs_path = os.path.join(settings.BITTENSOR_OTC_EX_DATA_DIR,
                                                         current_tick_ob_buy_orders_file_rel_path)
-
         return sell_orders_csv_file_abs_path, buy_orders_csv_file_abs_path
 
     def create_cmplt_order_book_dataset_abs_dl_file_paths(self, test_mode=False):
